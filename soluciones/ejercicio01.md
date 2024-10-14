@@ -37,8 +37,8 @@ Sigue los puntos del siguiente [Tutorial Guiado][GuidedDoc], intercambiando la c
 ```bash
 az login
 ```
+![image](https://github.com/user-attachments/assets/880caa5f-01dd-4e4d-8edf-7b0331cc32ca)
 
-![image](https://github.com/user-attachments/assets/57c480a9-90d1-41de-810c-1bf4db5f7714)
 
 ##### Setear el id de la subscripción
 
@@ -46,9 +46,10 @@ az login
 az account set --subscription "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-![image](https://github.com/user-attachments/assets/fe5281b0-f4bc-441f-a29e-f3add2368950)
+![image](https://github.com/user-attachments/assets/6d3c7297-4d71-4ef8-8f52-245b1d2ed547)
 
-##### Setear lñas variables de entorno
+
+##### Setear las variables de entorno
 
 ```bash
 export ARM_CLIENT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -57,8 +58,10 @@ export ARM_SUBSCRIPTION_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export ARM_TENANT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
+![image](https://github.com/user-attachments/assets/90a67cf9-9432-4cf7-ad15-97703643c3d4)
 
-![image](https://github.com/user-attachments/assets/3204eb7a-e956-44aa-88e8-a18b35ff0bc3)
+![Uploading image.png…]()
+
 
 ##### Aplicación de los cambios
 
@@ -66,12 +69,12 @@ export ARM_TENANT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 terraform apply
 ```
 
-![image](https://github.com/user-attachments/assets/923230ea-17b1-4f7b-8e16-2a1d45d9e7da)
+![image](https://github.com/user-attachments/assets/6b659d31-6fdb-4ca9-8c75-52176f740d10)
+
 
 ##### Mostrando recurso 
 
-![image](https://github.com/user-attachments/assets/6ba8a2ae-c580-4b73-bc7e-bd29d440c8ec)
-
+![image](https://github.com/user-attachments/assets/0cdbf8d9-1911-481d-83d7-ba93d7b84f3c)
 
 ![image](https://github.com/user-attachments/assets/57e055a8-dafc-4744-b809-c7bb2ea321bb)
 
