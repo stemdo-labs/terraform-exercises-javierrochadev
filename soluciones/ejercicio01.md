@@ -43,15 +43,38 @@ az login
 ##### Setear el id de la subscripción
 
 ```bash
-az account set --subscription "86f76907-b9d5-46fa-a39d-aff8432a1868"
+az account set --subscription "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 ![image](https://github.com/user-attachments/assets/fe5281b0-f4bc-441f-a29e-f3add2368950)
 
-##### Crear una nueva entidad de servicio en Azure
+##### Setear lñas variables de entorno
 
-´´´bash
-az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868"
+```bash
+export ARM_CLIENT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export ARM_CLIENT_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export ARM_SUBSCRIPTION_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export ARM_TENANT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
+
+
+![image](https://github.com/user-attachments/assets/3204eb7a-e956-44aa-88e8-a18b35ff0bc3)
+
+##### Aplicación de los cambios
+
+```bash
+terraform apply
+```
+
+![image](https://github.com/user-attachments/assets/923230ea-17b1-4f7b-8e16-2a1d45d9e7da)
+
+##### Mostrando recurso 
+
+![image](https://github.com/user-attachments/assets/6ba8a2ae-c580-4b73-bc7e-bd29d440c8ec)
+
+
+![image](https://github.com/user-attachments/assets/57e055a8-dafc-4744-b809-c7bb2ea321bb)
+
+
 
 
