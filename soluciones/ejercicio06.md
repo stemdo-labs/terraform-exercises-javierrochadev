@@ -26,3 +26,68 @@ Añade también un fichero `variables.tf` para definir las variables de entrada 
 
 - Documentación del proceso (con capturas de pantalla).
 - Código de Terraform utilizado (como un directorio propio dentro del entregable).
+
+Para usar un modulo remoto primero debemos de conocer en que plataforma esta este archivo alojado, y esque terraform es capaz de distinguir la plataforma de alojamiento del modulo para realizar la descarga de este de manera mas accesible para el usuario, por ejemplo es capaz de abrir el navegador para pedirnos a modo de click la autenticación para poder usar ese modulo, tambien podemos almacenarlo en un repo público para poder usarlo sin problemas de autenticación.
+
+##### Contenido de main.tf
+
+```yaml
+terraform {
+  required_version = ">= 0.12"
+  required_providers{
+   azurerm = {
+      source = "hashicorp/azurerm"
+      version = "4.5.0"
+    }
+  }
+}
+
+provider "azurerm" {
+  features {}
+  subscription_id = var.subscription_id
+  tenant_id = var.tenant_id
+}
+
+module "vnet" {
+  existent_resource_group_name  = var.existent_resource_group_name
+  location                      = var.location
+  vnet_address_space            = var.vnet_address_space
+  owner_tag                     = var.owner_tag
+  environment_tag               = var.environment_tag
+  vnet_tags                     = var.vnet_tags
+
+}
+```
+
+##### Contenido del module/ouputs.tf
+
+```yaml
+output "vnet_name" {
+  description = "El nombre de la red virtual creada"
+  value       = azurerm_virtual_network.v_net.name
+}
+```
+
+##### Contenido del ouputs.tf
+
+```yaml
+output "vnet_name" {
+  description = "El nombre de la red virtual creada"
+  value       = module.vnet.vnet_name
+}
+```
+
+Para poder mostrar los contenidos de los outputs, primero tienes que definirlos en el archivo del módulo haciendo referencia al nombre del output, luego en el del que le llama también tienes que definir un output haciendo referencia a cómo hayas llamado al módulo a la hora de la llamada cogiendo la variable que tengas en el outputs del módulo.
+
+```bash
+terraform init
+```
+
+![image](https://github.com/user-attachments/assets/bb2a946b-046e-4a9f-af4e-853b23e2f331)
+
+```bash
+terraform plan
+```
+
+![image](https://github.com/user-attachments/assets/58383867-abb7-41b1-bf0d-2bd68e4d0d12)
+
