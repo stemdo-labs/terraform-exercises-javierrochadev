@@ -59,7 +59,7 @@ module "vnet" {
 }
 ```
 
-##### Contenido del ouputs.tf
+##### Contenido del module/ouputs.tf
 
 ```yaml
 output "vnet_name" {
@@ -67,6 +67,17 @@ output "vnet_name" {
   value       = azurerm_virtual_network.v_net.name
 }
 ```
+
+##### Contenido del ouputs.tf
+
+```yaml
+output "vnet_name" {
+  description = "El nombre de la red virtual creada"
+  value       = module.vnet.vnet_name
+}
+```
+
+Para poder mostrar los contenidos de los outputs, primero tienes que definirlos en el archivo del módulo haciendo referencia al nombre del output, luego en el del que le llama también tienes que definir un output haciendo referencia a cómo hayas llamado al módulo a la hora de la llamada cogiendo la variable que tengas en el outputs del módulo.
 
 ```bash
 terraform init
@@ -78,13 +89,5 @@ terraform init
 terraform plan
 ```
 
-![image](https://github.com/user-attachments/assets/9eee5d4a-e2e5-4f87-9d61-48afa4c840ab)
-
-
-
-
-
-
-
-
+![image](https://github.com/user-attachments/assets/58383867-abb7-41b1-bf0d-2bd68e4d0d12)
 
