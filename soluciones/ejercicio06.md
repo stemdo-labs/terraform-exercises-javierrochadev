@@ -26,3 +26,5 @@ Añade también un fichero `variables.tf` para definir las variables de entrada 
 
 - Documentación del proceso (con capturas de pantalla).
 - Código de Terraform utilizado (como un directorio propio dentro del entregable).
+
+Para usar un modulo remoto primero debemos de conocer en que plataforma esta este archivo alojado, y esque terraform es capaz de distinguir la plataforma de alojamiento del modulo para realizar la descarga de este de manera mas accesible para el usuario, por ejemplo es capaz de abrir el navegador para pedirnos a modo de click la autenticación para poder usar ese modulo, tambien podemos almacenarlo en un repo público para poder usarlo sin problemas de autenticación.
