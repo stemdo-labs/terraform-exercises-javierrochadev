@@ -213,7 +213,8 @@ variable "vnet_tags" {
 
 ![image](https://github.com/user-attachments/assets/2a1faee9-ed06-457f-ae54-381f5cee56d0)
 
-![image](https://github.com/user-attachments/assets/bb72e095-09f8-4cc3-9148-d71435e0216a)
+![image](https://github.com/user-attachments/assets/18390fce-6e7a-42ce-bafe-ee737360abc2)
+
 
 
 
