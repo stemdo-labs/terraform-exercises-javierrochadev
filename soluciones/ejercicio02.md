@@ -38,6 +38,9 @@ Despliega el recurso en Azure utilizando el módulo desarrollado, documentando e
 
 ##### Contenido del main 
 
+Vamos a usar el recurso azurerm_virtual_network propio de Azure para la creación de redes son las variables que necesita para su fucnión como es el caso de una dirección IP
+
+
 ```yaml
 terraform {
   required_version = ">= 0.12"
@@ -66,6 +69,9 @@ resource "azurerm_virtual_network" "v_net" {
 
 ##### Contenido de terraform.tfvars
 
+Genramos umn fichero que usaremos a modo de variables de entorno con los valores que necesitamos los cuales son fijos
+
+
 ```yaml
 existent_resource_group_name = "rg-jrocha-dvfinlab"
 vnet_name = "vnetjaviertfexercise01"
@@ -73,6 +79,8 @@ vnet_address_space = ["10.0.0.0/16"]
 ```
 
 ###### Contenido de variables.tf
+
+Generamos un fichero de variables donde no damos valor a las variables que tenemos definidas en el fichero tfvars, si que le damos los valores al subscription_id y tenant_id, y tambien por petición del enunciado a la variable de location.
 
 ```yaml
 variable "subscription_id" {
