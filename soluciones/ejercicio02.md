@@ -35,3 +35,101 @@ Despliega el recurso en Azure utilizando el módulo desarrollado, documentando e
 
 - Documentación del proceso (con capturas de pantalla).
 - Código de Terraform utilizado (como un directorio propio dentro del entregable).
+
+##### Contenido del main 
+
+```yaml
+terraform {
+  required_version = ">= 0.12"
+  required_providers{
+   azurerm = {
+      source = "hashicorp/azurerm"
+      version = "4.5.0"
+    }
+  }
+}
+
+provider "azurerm" {
+  features {}
+  subscription_id = var.subscription_id
+  tenant_id = var.tenant_id
+}
+ 
+
+resource "azurerm_virtual_network" "v_net" {
+    name                     = var.vnet_name
+    resource_group_name      = var.existent_resource_group_name
+    location                 = var.location
+    address_space            = var.vnet_address_space
+}
+```
+
+##### Contenido de terraform.tfvars
+
+```yaml
+existent_resource_group_name = "rg-jrocha-dvfinlab"
+vnet_name = "vnetjaviertfexercise01"
+vnet_address_space = ["10.0.0.0/16"]
+```
+
+###### Contenido de variables.tf
+
+```yaml
+variable "subscription_id" {
+  description = "Id de la subscription"
+  default = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+
+variable "tenant_id" {
+  description = "Id de la tenant"
+  default = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+
+variable "location" {
+  description = "Localización del grupo de recursos"
+  default = "West Europe"
+}
+
+variable "existent_resource_group_name" {
+  description = "Nombre del grupo de recursos"
+  type = string
+}
+
+variable "vnet_name" {
+  description = "Nombre de la red"
+  type = string
+}
+
+variable "vnet_address_space" {
+  description = "Direccion de la red"
+  type = list(string)
+}
+```
+
+##### Creación y subida del recurso a Azure
+
+```bash
+terraform init
+```
+
+![image](https://github.com/user-attachments/assets/fd24e059-654e-4a18-b997-43582177078a)
+
+
+```bash
+terraform plan
+```
+
+![image](https://github.com/user-attachments/assets/04d75b6e-accb-4694-9b15-68e3df6d4f00)
+
+```bash
+terraform apply
+```
+![image](https://github.com/user-attachments/assets/614198ed-2d3c-4546-9997-fa464c02e9c1)
+
+![image](https://github.com/user-attachments/assets/cbc30435-a98a-4781-9599-cb8406a2b4a5)
+
+![image](https://github.com/user-attachments/assets/35c3fdb3-e25b-44bc-bd29-ba5a8c1d5f8a)
+
+
+
+
