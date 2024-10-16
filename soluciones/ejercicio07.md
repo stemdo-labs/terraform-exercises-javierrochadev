@@ -136,6 +136,7 @@ module "subnet" {
   virtual_network_name          = var.vnet_name
   subnets                       = var.subnets
   network_security_group_id     = azurerm_network_security_group.nsg.id
+  depends_on                    = [azurerm_virtual_network.v_net]
 }
 ```
 
