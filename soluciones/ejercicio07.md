@@ -178,6 +178,22 @@ resource "azurerm_subnet_network_security_group_association" "snsg" {
 
 ##### Capturas de ejemplo dobre el funcionamiento
 
+![image](https://github.com/user-attachments/assets/cf79f47c-c5b0-45e5-8336-9df72866de19)
+
+![image](https://github.com/user-attachments/assets/580ac08a-0a53-41b5-a4f1-56e34e2c6a9b)
+
+![image](https://github.com/user-attachments/assets/455d76f8-ba34-43dd-8eeb-b39fdec5c425)
+
+```bash
+terraform apply
+```
+![image](https://github.com/user-attachments/assets/328bbe59-c495-45e2-a91c-2ff6947321d8)
+
+##### Creación del grupo de seguridad en Azure
+
+![image](https://github.com/user-attachments/assets/b4ef9334-41a4-4703-9186-d89e1b3c8be3)
+
+## Se adnjunta la confiruación de la red en formato json en la carpeta auxiliares
 
 
 
