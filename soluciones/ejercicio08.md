@@ -130,3 +130,4 @@ terraform init -config-backend=config-backend.txt
 Con esto podremos migrar la configuración de nuestro backend en la nube.
 
 
+PONER LOS DATOS BIEN EN EL ARVCHVIO DE CONFIG Y HACER DE NUEVO EL APPLY PARA VER SI SIBE EL FICHERO DE ESTADO
