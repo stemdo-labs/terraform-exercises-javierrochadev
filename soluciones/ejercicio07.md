@@ -38,7 +38,7 @@ El ejemplo de uso puede constar de un solo fichero `main.tf` si se desea.
 
 ##### Contenido de main.tf
 
-En este arhcivo principal llamamaos al modulo anidado para crear una subred pasandole las varibales necesarias para crearla como parámetros, indicando tambien la ruta donde se encuentra este.
+En este arhcivo principal llamamaos a todos los modulos anidados que vaoms a usar, todos ellos estan alojados en el directorio modules/module_name correspondiente.
 
 ```yaml
 terraform {
@@ -70,31 +70,40 @@ module "vnet" {
   subnets                       = var.subnets
 
 }
+
+# Llamada al module para crear el grupo de seguridad
+
+module "gs"{
+  source                       = "./modules/gs"
+  location                     = var.location
+  existent_resource_group_name = var.existent_resource_group_name
+}
+
+# Llamada al modulo subnets para crear las subredes
+
+module "subnet" {
+  source                        = "./modules/subnet"
+  resource_group_name           = var.existent_resource_group_name
+  virtual_network_name          = var.vnet_name
+  subnets                       = var.subnets
+  network_security_group_id     = module.gs.network_security_group_id
+  depends_on                    = [module.vnet]
+  
+}
+
+# TENEMOS QUE MIRAR BIEN EL NOMBRE DE LAS VARIABLES PARA REFERENCIARLAS COMO ES DEBIDO
+
+module "snsg"{
+  source                     = "./modules/ngs"
+  subnet_ids                 = module.subnet.subnet_ids
+  network_security_group_id  = module.gs.network_security_group_id
+}
+
 ```
 
 ##### Contenido main del modulo vnet
 
-En este módulo definimos la creación del recurso para crear la red virtual, haciendo uso de las variables que le pasamos como parámetro. También creamos un recurso para la creación de un grupo de seguridad para la red que hemos creado, haciendo referencia al nombre del grupo que está en Azure ya creado. Por último, llamamos al módulo subnet para crear subredes a partir de la red principal que hemos creado, pasando como parámetro las variables que le hacen falta. Cabe destacar que le pasamos como parámetro una lista de objetos con los valores de las subredes que vamos a crear, con el nombre y la IP de cada una de ellas. En este caso, hemos usado dos subredes con una máscara de subred /17, ya que la red principal es /16. En este caso, solo hemos considerado hacer dos redes sin posibilidad de escalabilidad, pero solo es una prueba.
-
-```yaml
-variable "subnets" {
-  type = list(object({
-    name             = string
-    address_prefixes = list(string)
-  }))
-  description = "Estas con las direcciones de las subredes"
-  default = [
-  {
-    name             = "subred_1"
-    address_prefixes = ["10.0.0.0/17"]
-  },
-  {
-    name             = "subred_2"
-    address_prefixes = ["10.0.128.0/17"]
-  }
-]
-}
-```
+En este módulo definimos la creación del recurso para crear la red virtual, haciendo uso de las variables que le pasamos como parámetro. 
 
 
 ```yaml
@@ -109,7 +118,13 @@ resource "azurerm_virtual_network" "v_net" {
     }
     
 }
+```
 
+##### Contenido de main.tf del modulo gs
+
+En este modulo creamos un recurso para la creación de un grupo de seguridad para la red que hemos creado, haciendo referencia al nombre del grupo que está en Azure ya creado. Por último, llamamos al módulo subnet para crear subredes a partir de la red principal que hemos creado, pasando como parámetro las variables que le hacen falta. Cabe destacar que le pasamos como parámetro una lista de objetos con los valores de las subredes que vamos a crear, con el nombre y la IP de cada una de ellas. En este caso, hemos usado dos subredes con una máscara de subred /17, ya que la red principal es /16. En este caso, solo hemos considerado hacer dos redes sin posibilidad de escalabilidad, pero solo es una prueba.
+
+```hcl
 resource "azurerm_network_security_group" "nsg" {
   name                = "example-nsg"
   location            = var.location
@@ -127,17 +142,6 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefix = "*"
   }
 }
-
-# Llamada al modulo subred
-
-module "subnet" {
-  source                        = "./modules/subnet"
-  resource_group_name           = var.existent_resource_group_name
-  virtual_network_name          = var.vnet_name
-  subnets                       = var.subnets
-  network_security_group_id     = azurerm_network_security_group.nsg.id
-  depends_on                    = [azurerm_virtual_network.v_net]
-}
 ```
 
 ##### Contenido de main.tf del modulo subnet
@@ -146,7 +150,6 @@ En este archivo podemos ver cómo hacemos una iteración para crear las distinta
 
 Para acceder a una posición específica, usamos la variable index dentro del objeto count.
 
-Por último, hacemos la llamada al módulo de creación de grupo de seguridad para una subred, pasándole como parámetros una lista con los IDs generados para todas las subredes anteriormente creadas y el ID del grupo principal de seguridad.
 
 ```yaml
 resource "azurerm_subnet" "v_net_subnet" {
@@ -157,13 +160,8 @@ resource "azurerm_subnet" "v_net_subnet" {
   address_prefixes              = var.subnets[count.index].address_prefixes
 }
 
-module "subnet_network_security"{
-  source                     = "./modules/ngs"
-  subnet_ids                 = azurerm_subnet.v_net_subnet[*].id
-  network_security_group_id  = var.network_security_group_id
-}
-```
 
+```
 ##### Contendio de main de modulo ngs
 
 Volvemos a usar el count para poder crear dinámicamente, en función de los IDs recogidos del módulo anterior, todos los grupos de asociación de seguridad para cada subred creada, usando el ID de cada una de ellas y el ID del grupo principal de seguridad. Y así estaría toda la infraestructura de red creada con los requisitos que se piden.
@@ -177,22 +175,20 @@ resource "azurerm_subnet_network_security_group_association" "snsg" {
 }
 ´´´
 
+## Nota
+
+Hay que definir los outputs como variables para que puedan ser usadas en el módulo principal de cada uno de ellos, como es el caso de los IDs, ya que son valores que se han creado dinámicamente.
+
 ##### Capturas de ejemplo dobre el funcionamiento
-
-![image](https://github.com/user-attachments/assets/cf79f47c-c5b0-45e5-8336-9df72866de19)
-
-![image](https://github.com/user-attachments/assets/580ac08a-0a53-41b5-a4f1-56e34e2c6a9b)
-
-![image](https://github.com/user-attachments/assets/455d76f8-ba34-43dd-8eeb-b39fdec5c425)
 
 ```bash
 terraform apply
 ```
-![image](https://github.com/user-attachments/assets/328bbe59-c495-45e2-a91c-2ff6947321d8)
+![image](https://github.com/user-attachments/assets/397ac288-395a-4385-81e7-d2456a68a26a)
 
 ##### Creación del grupo de seguridad en Azure
 
-![image](https://github.com/user-attachments/assets/b4ef9334-41a4-4703-9186-d89e1b3c8be3)
+![image](https://github.com/user-attachments/assets/8d4edbf6-47b6-4235-9a68-39622afb79e8)
 
 ## Se adnjunta la confiruación de la red en formato json en la carpeta auxiliares
 
