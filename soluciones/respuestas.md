@@ -81,7 +81,7 @@ Ahora verificamos en el portal Azure que la cuenta y el vault se han creado corr
 
 Definimos los mismo resursos que hay en el otro poryecto de terraform parapoder traernos la condifguración de los recursos mediante import.
 
-`hcl
+```hcl
 import {
   to = azurerm_storage_account.tfacc
   id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -101,6 +101,8 @@ Podemos ver como nos crea el archivo generated.tf con el código de los recursos
 
 ![image](https://github.com/user-attachments/assets/5f1fba4b-d5ac-4ec8-aa65-5f5b08676435)
 
+Tenemos que cambiar ciertos valores geenerados en el generated.tf con el valor de 7 que tenemos por defecto en el despligue con el TF!.
+
 ## 1. Revisa el código. ¿Qué observas? ¿El código generado es exactamente lo que esperabas?
 
 Se ha generado un archivo generated.tf en el cual aparce los recursos con los datos que tienen realmente en la nube.
@@ -108,6 +110,16 @@ Se ha generado un archivo generated.tf en el cual aparce los recursos con los da
 ## 2. ¿Qué sucede cuando ejecutas la creación de un recurso que ya existe en Azure pero no está reflejado en el archivo de configuración de Terraform?
 
 Da error de duplicidad, es decir, como ya existe, no puede volver a crearlo. Por eso se hace uso del import de los recursos que ya hay en la nube. Estos se guardan en el generated.tf, lo cual te permite saber lo que hay en la nube y generar en el archivo main la nueva configuración a partir de esa. Así no hay conflictos, ya que lo que hace Terraform es unificar todos los archivos .tf y de ahí forma toda la configuración.
+
+### Segunda parte
+
+##### Eliminación de key_vault
+
+Para borrar un recurso de manera rápida usaremos el destroy poniendo una bandera como target al recurso que queremos borrar.
+
+```bash
+terraform destroy -target=azurerm_key_vault.example
+```
 
 
 
