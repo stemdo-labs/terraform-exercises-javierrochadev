@@ -1,62 +1,66 @@
-# Ejercicio 09
+# Ejercicio 09: Gestión de Recursos con Terraform Import y el Estado
 
 ## Objetivos
-El objetivo de este ejercicio es comprender el uso de terraform import y cómo afecta al tfstate en situaciones concretas. Se presentarán dos escenarios para explorar estos conceptos.
+El objetivo de este ejercicio es comprender el uso de `terraform import` y los bloques de import introducidos en Terraform 1.5 para manipular el `tfstate` en situaciones concretas. Se presentarán dos escenarios para explorar estos conceptos.
 
-# Entregables
-
-**IMPORTANTE:**
+## Entregables
+**IMPORTANTE**: 
 - Documentación del proceso (con capturas de pantalla).
-- Código de Terraform utilizado (como un directorio propio dentro del entregable).
-- Se adjuntará, un archivo respuestas.md, donde se escribirán las respuestas a las preguntas 
+- Código de Terraform utilizado (organizado en un directorio por separado).
+- Archivo `respuestas.md` donde se incluirán las respuestas a las preguntas planteadas a lo largo del ejercicio.
 
-# Primera Parte: Importar Recursos Existentes en Azure.
-En esta parte, trabajarás con recursos que ya existen en Azure pero que no están reflejados en el archivo de configuración de Terraform.
+## Primera Parte: Uso de terraform import y Bloques de Importación
+Descompondremos esta parte en dos fases:
 
-1. Añadir los bloques de terraform import en el archivo main.tf para los siguientes recursos:
-        Azure Resource Group
-        Azure Key Vault
-        Azure Storage Account
-    Nota: No definas los recursos explícitamente en Terraform, solo añade los bloques de importación necesarios.
+1. **Fase de preparación**:
+   - Se desplegarán los recursos iniciales en Azure a través de Terraform. Estos recursos, en un escenario real, ya existirían en Azure y se asumirá que se han creado manualmente a través de la interfaz gráfica de usuario del Proveedor Cloud, sin Terraform.  
+     No obstante, por las limitaciones en permisos de Azure, se creará un archivo de configuración de Terraform para desplegar estos recursos usando el service principal que se os ha proporcionado.
 
-2. Ejecutar terraform plan -generate-config-out="generated.tf"  (es posible que debas ajustar este comando) para generar el código de los  
-   recursos.
+2. **Fase de importación**:
+   - En un escenario real, estaríamos creando un Terraform que requiere importar en su `tfstate` recursos que ya existen en Azure.
 
-3. Revisar el código generado en el archivo generated.tf. ¿Qué observas? ¿Es el código generado exactamente lo que esperabas?
+### Pasos a seguir:
 
-4. Ejecutar los comandos terraform init, terraform plan y terraform apply
+#### Despliega los recursos iniciales:
 
-5. ¿Qué sucede cuando importas un recurso que ya existe en Azure pero no en el archivo de configuración de Terraform?
+1. Crea un primer archivo de configuración Terraform (al que se denominará **TF1** de ahora en adelante) en una carpeta de nombre "recursos_preexistentes" donde definas y despliegues los siguientes recursos en Azure:
+   - Azure Key Vault
+   - Azure Storage Account
+2. Ejecuta `terraform init`, `terraform plan` y `terraform apply` en **TF1** para crear los recursos en Azure.
 
-6. ¿Cómo afecta la importación al tfstate? ¿Qué diferencias observas en el estado después de aplicar los cambios?
+#### Importa los recursos a otro archivo de configuración (TF2):
 
+1. Crea una segunda carpeta, denominada "segundo_despliegue" y, dentro de ella, crea un archivo de configuración Terraform (al que se denominará **TF2** de ahora en adelante), donde se debe definir lo necesario para realizar la importación de los siguientes recursos ya existentes (creados en **TF1**):
+   - **Azure Key Vault**: Para importar este recurso, utiliza el comando de Terraform correspondiente.
+   - **Azure Storage Account**: Para importar este recurso, utiliza la metodología correspondiente al uso de bloque de importación.
+2. Ejecuta los comandos necesarios en **TF2** para importar los recursos y aplicar los cambios.
 
-# Segunda Parte: Manejar la Eliminación de un Recurso Externo
-En esta parte, investigarás qué sucede con el tfstate si se elimina un recurso en Azure sin utilizar Terraform.
+### Preguntas:
+- Revisa el código. ¿Qué observas? ¿El código generado es exactamente lo que esperabas?
+- ¿Qué sucede cuando ejecutas la creación de un recurso que ya existe en Azure pero no está reflejado en el archivo de configuración de Terraform?
 
-1. Crear manualmente un Network Security Group (NSG) en Azure a través del portal.
+## Segunda Parte: Gestión del tfstate Tras la Eliminación de un Recurso
+En esta parte, se aprenderá a gestionar el archivo `tfstate` cuando un recurso que se lanzó con Terraform es eliminado manualmente fuera de Terraform.
 
-2. Añadir un bloque de terraform import en main.tf para importar el NSG al tfstate.
+### Elimina el Key Vault:
 
-3. Ejecutar terraform show para verificar que el estado refleja correctamente el NSG y otros recursos.
+1. Utilizando **TF1**, destruye el recurso **Azure Key Vault** previamente desplegado.
 
-4. Eliminar el NSG desde el portal de Azure.
+### Actualiza el estado de TF2:
 
-5. Actualizar el tfstate para reflejar la eliminación del NSG. ¿Cómo podrías eliminar el recurso del tfstate?
+1. Haz un backup del archivo `tfstate` de **TF2** antes de realizar el resto de operaciones.
+2. Gestiona el `tfstate` de **TF2** para reflejar la eliminación del **AKV** en la infraestructura:
+   - Usa el comando adecuado para eliminar el **AKV** del `tfstate` sin destruir otros recursos (consulta la documentación).
+   - Edita la configuración de **TF2** con los cambios necesarios para reflejar la situación actual de la infraestructura. Es decir, que el **AKV** ya no existe.
+3. Ejecuta los comandos necesarios para aplicar los cambios: ¿Qué sucede? ¿Es lo que esperabas?
 
-6. Reflexiona sobre los bloques de importación en main.tf. ¿Es necesario mantenerlos una vez que el recurso ha sido eliminado?
-
-7. ¿Qué sucede en el tfstate cuando eliminas un recurso en Azure sin utilizar Terraform?
-
-8. ¿Cómo puedes asegurarte de que el tfstate refleja el estado real de tus recursos?
-
-9. ¿Qué pasos adicionales son necesarios después de importar y  después de eliminar recursos?
-
+### Preguntas:
+- ¿Qué diferencias observas entre el backup del `tfstate` de **TF2** y el resultado de aplicar las operaciones previas?
+- ¿Qué problemática podrías enfrentar en el `tfstate` de un Terraform si un recurso de su configuración es eliminado manualmente (sin usar ese Terraform)?
+- ¿Qué maneras se te ocurren para comprobar que el `tfstate` refleja el estado real de los recursos?
+- ¿Es necesario mantener los bloques de importación en el archivo `main.tf` de **TF2** después de realizar las operaciones anteriores?
 
 ## Enlaces de interés
-
-- Documentación oficial: https://registry.terraform.io/
-
-- Terraform import: https://developer.hashicorp.com/terraform/language/import/generating-configuration
-
-- Terraform state rm: https://developer.hashicorp.com/terraform/cli/commands/state/rm
+- [Documentación oficial de Terraform](https://www.terraform.io/docs)
+- [Terraform import: Generating Configuration](https://www.terraform.io/docs/cli/import/usage.html)
+- [Terraform state rm](https://www.terraform.io/docs/cli/commands/state/rm.html)
