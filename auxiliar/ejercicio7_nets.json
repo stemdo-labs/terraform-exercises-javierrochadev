@@ -1,7 +1,7 @@
 {
     "name": "vnetjaviertfexercise04",
     "id": "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Network/virtualNetworks/vnetjaviertfexercise04",
-    "etag": "W/\"7b37fcbb-8bff-4879-8af4-908ea20cdbb9\"",
+    "etag": "W/\"15d329f2-e51f-4065-b2e5-f2990df8a883\"",
     "type": "Microsoft.Network/virtualNetworks",
     "location": "westeurope",
     "tags": {
@@ -10,7 +10,7 @@
     },
     "properties": {
         "provisioningState": "Succeeded",
-        "resourceGuid": "874282a2-c0ec-42da-a876-92cf93b66f90",
+        "resourceGuid": "b2c1b0e7-699a-4d5f-8e7a-acc366a0c2e6",
         "addressSpace": {
             "addressPrefixes": [
                 "10.0.0.0/16"
@@ -22,12 +22,12 @@
         },
         "subnets": [
             {
-                "name": "subred_2",
-                "id": "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Network/virtualNetworks/vnetjaviertfexercise04/subnets/subred_2",
-                "etag": "W/\"7b37fcbb-8bff-4879-8af4-908ea20cdbb9\"",
+                "name": "subred_1",
+                "id": "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Network/virtualNetworks/vnetjaviertfexercise04/subnets/subred_1",
+                "etag": "W/\"15d329f2-e51f-4065-b2e5-f2990df8a883\"",
                 "properties": {
                     "provisioningState": "Succeeded",
-                    "addressPrefix": "10.0.128.0/17",
+                    "addressPrefix": "10.0.0.0/17",
                     "ipamPoolPrefixAllocations": [],
                     "networkSecurityGroup": {
                         "id": "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Network/networkSecurityGroups/example-nsg"
@@ -41,12 +41,12 @@
                 "type": "Microsoft.Network/virtualNetworks/subnets"
             },
             {
-                "name": "subred_1",
-                "id": "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Network/virtualNetworks/vnetjaviertfexercise04/subnets/subred_1",
-                "etag": "W/\"7b37fcbb-8bff-4879-8af4-908ea20cdbb9\"",
+                "name": "subred_2",
+                "id": "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Network/virtualNetworks/vnetjaviertfexercise04/subnets/subred_2",
+                "etag": "W/\"15d329f2-e51f-4065-b2e5-f2990df8a883\"",
                 "properties": {
                     "provisioningState": "Succeeded",
-                    "addressPrefix": "10.0.0.0/17",
+                    "addressPrefix": "10.0.128.0/17",
                     "ipamPoolPrefixAllocations": [],
                     "networkSecurityGroup": {
                         "id": "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Network/networkSecurityGroups/example-nsg"
