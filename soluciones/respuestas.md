@@ -2,7 +2,7 @@
 
 ##### Creación de los resursos
 
-Creamos los dos recursos que se espefican en el enunciado con los nombres que se ven a continuación.
+Creamos los dos recursos que se especifican en el enunciado con los nombres que se ven a continuación.
 
 
 ```hcl
@@ -71,7 +71,7 @@ resource "azurerm_key_vault" "keyvault" {
 ```
 
 
-Ahora verificamos en el portal Azure que la cuenta y el vault se han creado corretamente.
+Ahora verificamos en el portal Azure que la cuenta y el vault se han creado correctamente.
 
 ![image](https://github.com/user-attachments/assets/f089eca0-7c21-4e6e-b2f8-d713dbdfb3cb)
 
@@ -128,7 +128,7 @@ Generamos una copia del archivo del estado de TF1.
 
 ![image](https://github.com/user-attachments/assets/e5efdf84-49e5-40ab-b773-4f1f4c7c34b2)
 
-Para poder borrar del tfstate el modulo recurso específico que genera el key vault podemos usar el siguiente comando, lo que hace es eliminar manualmente un recurso, asi terraform no lo tendra en cuenta por que al no estar en su state es como si no existiera.
+Para poder borrar del tfstate el módulo o recurso específico que genera el Key Vault, podemos usar el siguiente comando. Lo que hace es eliminar manualmente un recurso, así Terraform no lo tendrá en cuenta, porque al no estar en su state, es como si no existiera.
 
 Podemos mostrar todos los recursos que tenemos con este comando.
 
@@ -144,9 +144,9 @@ terraform state rm azurerm_key_vault.tf1-key-vault
 
 ![image](https://github.com/user-attachments/assets/650b9a32-ddba-4dd3-a456-c07d8c8da777)
 
-Ahora para reflejar los cambios reales debemos de borrar el import que hace referncia al akv ya que no esta desplegado, al borrarlo de nuesto state a mano no nos dara problemas, borramos el archivo generated.tf y volvemos a hacer un plan pero esta vez solo con el impor de la cuenta de almacenamiento.
+Ahora, para reflejar los cambios reales, debemos borrar el import que hace referencia al AKV, ya que no está desplegado. Al borrarlo de nuestro state manualmente, no nos dará problemas. Borramos el archivo generated.tf y volvemos a hacer un plan, pero esta vez solo con el import de la cuenta de almacenamiento.
 
-Por otro lado tambien debemos de eliminarlo del archivo generated.tf ya que tiene todos los recursos desplegados en la nube de azure. 
+Por otro lado, también debemos eliminarlo del archivo generated.tf, ya que tiene todos los recursos desplegados en la nube de Azure, y, por supuesto, debemos quitar los imports que teníamos antes, ya que el código está en el generated.tf.
 
 ```hcl
 terraform {
@@ -173,25 +173,26 @@ provider "azurerm" {
   tenant_id = var.tenant_id
 }
 
-import {
-  to = azurerm_storage_account.tfacc
-  id = "/subscriptions/86f76907-b9d5-46fa-a39d-aff8432a1868/resourceGroups/rg-jrocha-dvfinlab/providers/Microsoft.Storage/storageAccounts/tf1acc"
-}
 ```
+Como vemos, el único cambio que va a realizar el plan es un change, ya que le seteamos valores mayores de cero a las variables del Azure account que estaban seteadas por defecto, pero la estructura es la misma.
 
-![image](https://github.com/user-attachments/assets/ab69ab28-972b-4d52-9a00-bf2fc2c0511e)
-
-
-Podemos observar como se ha realizado un cambio sobre el archivo existente es decir no ha habido ningun problema por que borramos el archivo que no existe en nuestro state local.
-
-![Uploading image.png…]()
-
+![image](https://github.com/user-attachments/assets/6c60d2b4-0dcf-4ee3-a9ca-c5d7d6302f21)
 
 
 ## 1. ¿Qué diferencias observas entre el backup del tfstate de TF2 y el resultado de aplicar las operaciones previas?
+
+El cambio radica en que en el backup se reflejan los dos recursos que había en primera instancia, pero en el actual solo está la cuenta de almacenamiento.
+
 ## 2. ¿Qué problemática podrías enfrentar en el tfstate de un Terraform si un recurso de su configuración es eliminado manualmente (sin usar ese Terraform)?
+
+Que el estado que tengo en local no refleja realmente el estado de la infraestructura desplegada en Azure, con lo cual va a haber problemas porque no coinciden las configuraciones.
+
 ## 3. ¿Qué maneras se te ocurren para comprobar que el tfstate refleja el estado real de los recursos?
+
+Primero haría un comando plan para ver qué es lo que me falta a mí respecto a lo que hay desplegado en Azure. Después de saber que hay un recurso que no está, procedería a eliminarlo con el comando terraform state rm resource_name. Por último, ahora volvería a hacer un plan para verificar que las configuraciones son las mismas.
+
 ## 4. ¿Es necesario mantener los bloques de importación en el archivo main.tf de TF2 después de realizar las operaciones anteriores?
 
+No, lo que hacen los imports realmente es acceder a ese recurso en la nube. Si usamos el comando terraform plan con el uso de la bandera -generate-config-out=generated.tf, lo que hace Terraform es generar esos recursos desplegados en código, es decir, ya los tenemos en local con la misma configuración que está en la nube, con lo cual los imports ya no hacen falta.
 
 
