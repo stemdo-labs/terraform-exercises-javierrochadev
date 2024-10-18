@@ -196,6 +196,50 @@ variable "vnet_tags" {
 }
 ```
 
+##### Contenido de fichero ouputs.tf
+
+```hcl
+output "vnet_id" {
+  description = "El ID de la red virtual creada."
+  value       = azurerm_virtual_network.v_net.id
+}
+
+output "vnet_name" {
+  description = "El nombre de la red virtual creada."
+  value       = azurerm_virtual_network.v_net.name
+}
+
+output "vnet_address_space" {
+  description = "El espacio de direcciones de la red virtual."
+  value       = azurerm_virtual_network.v_net.address_space
+}
+
+output "resource_group_name" {
+  description = "El nombre del grupo de recursos donde se ha creado la red virtual."
+  value       = azurerm_virtual_network.v_net.resource_group_name
+}
+
+output "location" {
+  description = "La ubicación de la red virtual."
+  value       = azurerm_virtual_network.v_net.location
+}
+
+output "tags" {
+  description = "Las etiquetas asociadas a la red virtual."
+  value       = azurerm_virtual_network.v_net.tags
+}
+
+output "owner_tag" {
+  description = "La etiqueta de propietario asociada a la red virtual."
+  value       = lookup(azurerm_virtual_network.v_net.tags, "owner_tag", var.owner_tag)
+}
+
+output "environment_tag" {
+  description = "La etiqueta de entorno asociada a la red virtual."
+  value       = lookup(azurerm_virtual_network.v_net.tags, "environment_tag", var.environment_tag)
+}
+``
+
 ##### Demostración
 
 ```bash
