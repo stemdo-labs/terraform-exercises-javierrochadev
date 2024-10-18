@@ -111,9 +111,16 @@ variable "existent_resource_group_name" {
 variable "vnet_name" {
   description = "Nombre de la red"
   type        = string
+# Opción fácil
   validation {
     condition     = var.vnet_name != "" && var.vnet_name != null
     error_message = "vnet_name no puede ser una cadena vacía."
+  }
+# Opción dificil
+
+ validation {
+    condition     = can(regex("^vnet[a-z]{2,}tfexercise\\d{2,}$", var.vnet_name))
+    error_message = "El nombre debe comenzar con 'vnet', seguido de al menos dos letras minúsculas, luego 'tfexercise', y terminar con al menos dos dígitos."
   }
 }
 
@@ -192,6 +199,16 @@ variable "vnet_tags" {
 6. **upper()**
    - **Descripción**: Esta función convierte una cadena a mayúsculas. Es útil para normalizar las entradas antes de realizar comparaciones.
    - **Uso**: Se utiliza comúnmente en validaciones para asegurar que las entradas sean comparables, independientemente de cómo el usuario ingrese el texto (en mayúsculas o minúsculas).
+  
+7. **regex()**
+   - **Descripción**: Esta función evalúa una cadena de texto contra una expresión regular y devuelve `true` si hay coincidencia o `false` si no la hay. Es útil para validar formatos y patrones en cadenas de texto.
+   - **Uso**: Se utiliza comúnmente en validaciones para comprobar si una variable o entrada de usuario cumple con un formato específico. En este caso, se aplica para verificar si el valor de `var.vnet_name` coincide con el patrón definido por la expresión regular `^vnet[a-z]{2,}tfexercise\\d{2,}$`. Esto asegura que el nombre de la red virtual siga las reglas establecidas, como comenzar con "vnet", estar seguido de al menos dos letras minúsculas, incluir "tfexercise", y terminar con al menos dos dígitos numéricos.
+
+8. **can()**
+   - **Descripción**: Esta función evalúa una expresión y devuelve `true` si la expresión se ejecuta correctamente, o `false` si ocurre un error. Es útil para manejar excepciones de forma segura en Terraform.
+   - **Uso**: Se utiliza comúnmente para verificar si una operación, como una expresión regular, puede ejecutarse sin errores. En este caso, se emplea junto con la función `regex()` para comprobar si el valor de la variable `var.vnet_name` cumple con un patrón específico. Esto permite asegurar que la variable contenga un formato válido antes de proceder con otras operaciones, garantizando así la integridad de los datos.
+
+
 
 ##### Casos de uso
 
