@@ -44,7 +44,7 @@ Despliega el recurso en Azure utilizando el módulo desarrollado, documentando e
 
 Tenemos como nuevo valor el uso de la variable tags que tiene definida el módulo azurerm_virtual_network, la cual acepta un map de string para poder indicarle las etiquetas que quieras. Hacemos el uso de la función lookup(map_name, "key_on_search", "default_value"), la cual busca en un mapa una variable que tenga la clave especificada en el primer parámetro y le asigna un valor por defecto si esta no existe en dicho mapa.
 
-'''yaml
+```yaml
 terraform {
   required_version = ">= 0.12"
   required_providers{
