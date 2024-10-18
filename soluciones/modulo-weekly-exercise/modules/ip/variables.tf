@@ -23,7 +23,6 @@ variable "allocation_method" {
 variable "sku" {
   description = "SKU de la IP pública (Standard o Basic)"
   type        = string
-  default     = "Standard"
 }
 
 

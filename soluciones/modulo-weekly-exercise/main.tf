@@ -69,6 +69,7 @@ module "public-ip" {
   name                = var.public_ip_name
   location            = var.location
   resource_group_name = var.resource_group_name
+  sku                 = var.sku
 }
 
 # Llamda a modulo para crear interfaces de red
@@ -97,4 +98,49 @@ module "my_vm" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = module.interface.network_interface_ids
+}
+
+
+
+# Llamada a modulo para la creación de un balanceador de cargas
+
+ module "lb" {
+  source               = "./modules/lb"
+  load_balancer_name   = var.load_balancer_name
+  location             = var.location
+  resource_group_name  = var.resource_group_name
+  sku                  = var.sku
+  public_ip_name       = var.public_ip_name
+  public_ip_address_id = module.public-ip.public_ip_id
+}
+
+# Llamda a modulo para crear un grupo de ips para el baanceador de cargas
+
+module "lb_pool" {
+  source                       = "./modules/lbpool"
+  loadbalancer_id              = module.lb.load_balancer_id
+  lb_pool_name                 = var.lb_pool_name
+}
+
+# Llamada a modulo para manejar el sondeo de las instacias de los servidores
+
+module "lb_probe" {
+  source              = "./modules/lbprobe"
+  loadbalancer_id     = module.lb.load_balancer_id
+  lb_probe_name       = var.lb_probe_name
+  port                = var.port
+}
+
+# Llamda a modulo para definir reglas de como hacer el balanceo
+
+module "lb_rule" {
+  source                         = "./modules/lbrule"
+  loadbalancer_id                = module.lb.load_balancer_id
+  rule_name                      = var.rule_name
+  rule_protocol                  = var.rule_protocol
+  frontend_port                  = var.port
+  backend_port                   = var.port
+  public_ip_name                 = var.public_ip_name
+  probe_id                       = module.lb_probe.lb_probe_id
+  backend_address_pool_ids       = [module.lb_pool.backend_address_pool_id]
 }
