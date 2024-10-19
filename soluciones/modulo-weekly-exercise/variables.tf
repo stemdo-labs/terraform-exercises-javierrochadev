@@ -9,6 +9,10 @@
   variable "vnet_address_space"  {
     description = "Dirección de la vnet"
     type        = list(string)
+     validation {
+    condition = length(var.vnet_address_space) > 0
+    error_message = "La dirección de la VNet no puede estar vacía. Debe contener al menos una dirección."
+  }
   }  
 
     variable "resource_group_name"  {
@@ -52,6 +56,10 @@ variable "network_interface_name"  {
 variable "vm_count" {
   description = "Número de máquinas virtuales a crear."
   type        = number
+  validation {
+    condition     = var.vm_count >= 1 && var.vm_count <= 3
+    error_message = "El número de máquinas virtuales debe estar entre 1 y 3."
+  }
 }
 
 
