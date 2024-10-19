@@ -1,12 +1,3 @@
-  variable "subscription_id" {
-  description = "Id de la subscription"
-  type = string
-}
-
-variable "tenant_id" {
-  description = "Id de la tenant"
-  type = string
-}
 
   
   variable "location"  {
