@@ -12,43 +12,30 @@ variable "tenant_id" {
   variable "location"  {
     description = "Localización de la infraestructura"
     type        = string
-    default     = "West Europe"
+
   }    
+
+  variable "vnet_address_space"  {
+    description = "Dirección de la vnet"
+    type        = list(string)
+  }  
 
     variable "resource_group_name"  {
     description = "Localización de la infraestructura"
     type        = string
-    default     = "rg-jrocha-dvfinlab"
+    
   }        
-  variable "subnets" {
-  type = list(object({
-    name             = string
-    ip = list(string)
-  }))
+ 
+
+locals {
   
-  description = "Estas son las direcciones de las subredes"
-  
-  default = [
-    {
-      name             = "subred_1"
-      ip = ["10.0.1.0/24"]
-    },
-    {
-      name             = "subred_2"
-      ip = ["10.0.2.0/24"]
-    },
-    # {
-    #   name             = "subred_3"
-    #   ip = ["10.0.3.0/24"]
-    # },
-    # {
-    #   name             = "subred_4"
-    #   ip = ["10.0.4.0/24"]
-    # }
+  subnets = [
+    for i in range(var.vm_count) : {
+      name = "subred_${i + 1}"
+      ip   = ["10.0.${i + 1}.0/24"]
+    }
   ]
-  }
-
-
+}
 
 variable "network_security_group_name"  {
 
@@ -71,53 +58,26 @@ variable "network_interface_name"  {
     default     = "test-interface"
   }
 
-variable "virtual_machines" {
-  description = "Lista de objetos con los parametros de las maquinas virtuales."
-  type        = list(object({
-    name                      = string
-    size                      = string
-    disk_name                 = string
-    storage_account_type      = string
-    username                  = string
-    password                  = string
+variable "vm_count" {
+  description = "Número de máquinas virtuales a crear."
+  type        = number
+}
 
-  }))
 
-  default = [
-    {
-      name                      = "test-vm1"
+locals {
+  virtual_machines = [
+    for i in range(var.vm_count) : {
+      name                      = "test-vm${i + 1}"
       size                      = "Standard_B1s" # VM barata para pruebas
-      disk_name                 = "test-vm1-disk"
+      disk_name                 = "test-vm${i + 1}-disk"
       storage_account_type      = "Standard_LRS" # Tipo de almacenamiento
       username                  = "adminuser"
       password                  = "P@ssw0rd1234!"
-    },
-    {
-      name                      = "test-vm2"
-      size                      = "Standard_B1s"
-      disk_name                 = "test-vm2-disk"
-      storage_account_type      = "Standard_LRS"
-      username                  = "adminuser"
-      password                  = "P@ssw0rd1234!"
-    },
-    # {
-    #   name                      = "test-vm3"
-    #   size                      = "Standard_B1s"
-    #   disk_name                 = "test-vm3-disk"
-    #   storage_account_type      = "Standard_LRS"
-    #   username                  = "adminuser"
-    #   password                  = "P@ssw0rd1234!"
-    # },
-    # {
-    #   name                      = "test-vm4"
-    #   size                      = "Standard_B1s"
-    #   disk_name                 = "test-vm4-disk"
-    #   storage_account_type      = "Standard_LRS"
-    #   username                  = "adminuser"
-    #   password                  = "P@ssw0rd1234!"
-    # }
+    }
   ]
 }
+
+
 variable "sku" {
   description = "SKU de la IP pública (Standard o Basic)"
   type        = string
@@ -160,4 +120,11 @@ variable "rule_protocol" {
   type        = string
   default     = "Tcp"
 }
+variable "lb_out_rule_name" {
+  description = "Protocolo que se va a seguir para el balanceo"
+  type        = string
+  default     = "test-lboutbound-rule"
+}
+
+
 
