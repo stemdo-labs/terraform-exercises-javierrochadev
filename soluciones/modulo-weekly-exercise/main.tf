@@ -1,34 +1,11 @@
-terraform {
-  required_version = ">= 0.12"
-  required_providers{
-   azurerm = {
-      source = "hashicorp/azurerm"
-      version = "4.5.0"
-    }
-  }
-  
-    # backend "azurerm"{
-    #   storage_account_name = "stajrochadvfinlab"
-    #   container_name       = "terraform-state"
-    #   key                  = "terraform.tfstate"
-    #   resource_group_name  = "rg-jrocha-dvfinlab"
-    # }
-
-}
-
-provider "azurerm" {
-  features {}
-  subscription_id = var.subscription_id
-  tenant_id = var.tenant_id
-}
 
 
 # Llamada a modulo para la creación de una red virutal
 
 module "vnet"{
     source              = "./modules/vnet"
-    name                = "main-vnet"
-    address_space       = ["10.0.0.0/16"]
+    name                = "main-vnet-tf"
+    address_space       = var.vnet_address_space
     location            = var.location
     resource_group_name = var.resource_group_name
 
@@ -40,7 +17,7 @@ module "subnet" {
   depends_on           = [module.vnet]
   resource_group_name  = var.resource_group_name
   virtual_network_name = module.vnet.vnet_name
-  subnets              = var.subnets
+  subnets              = local.subnets
 }
 
 # Llamada a modulo para la creación de un grupo de seguridad en la red
@@ -84,17 +61,20 @@ module "interface" {
 
 # Llamada a modulo para crear interfaces para el balanceador de cargas para cada subnet
 
-# module "lb-pool" {
-#   source                  = "./modules/poolassoc"
-#   network_interface_ids   = module.interface.network_interface_ids
-#   public_ip_name          = var.public_ip_name
-# }
+module "lb-pool-assoc" {
+  source                  = "./modules/poolassoc"
+  depends_on              = [module.public-ip, module.interface, module.lb_pool]
+  network_interface_ids   = module.interface.network_interface_ids
+  public_ip_name          = var.public_ip_name
+  backend_address_pool_id = module.lb_pool.backend_address_pool_id
+  
+}
 
 # Llamada a modulo para la creación de maquinas virtuales
 
 module "my_vm" {
   source                = "./modules/vm"
-  virtual_machines      = var.virtual_machines
+  virtual_machines      = local.virtual_machines
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = module.interface.network_interface_ids
@@ -143,4 +123,15 @@ module "lb_rule" {
   public_ip_name                 = var.public_ip_name
   probe_id                       = module.lb_probe.lb_probe_id
   backend_address_pool_ids       = [module.lb_pool.backend_address_pool_id]
+}
+
+# Llamada a modulo para definir las reglas de tráfico saliente
+
+module "lboutbound_rule" {
+  source                  = "./modules/lboutrule"
+  lb_out_rule_name        = var.lb_out_rule_name
+  loadbalancer_id         = module.lb.load_balancer_id
+  rule_protocol                = var.rule_protocol
+  backend_address_pool_id = module.lb_pool.backend_address_pool_id
+  public_ip_name          = var.public_ip_name
 }
