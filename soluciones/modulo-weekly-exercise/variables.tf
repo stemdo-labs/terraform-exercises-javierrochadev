@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-#   variable "subscription_id" {
-#   description = "Id de la subscription"
-#   type = string
-# }
-# 
-# variable "tenant_id" {
-#   description = "Id de la tenant"
-#   type = string
-# }
-=======
->>>>>>> 68ad86e8c14afff5b98c12feccbe2acd6575eb29
 
   
   variable "location"  {
