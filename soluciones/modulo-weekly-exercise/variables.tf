@@ -26,7 +26,7 @@ locals {
   
   subnets = [
     for i in range(var.vm_count) : {
-      name = "subred_${i + 1}"
+      name = "subred-test_${i + 1}"
       ip   = ["10.0.${i + 1}.0/24"]
     }
   ]
@@ -43,14 +43,14 @@ variable "public_ip_name"  {
 
     description = "Nombre de la IP púbilca."
     type        = string
-    default     = "test-ip-public-test"
+    default     = "ip-public-test"
   }  
 
 variable "network_interface_name"  {
 
     description = "Nombre de la IP púbilca."
     type        = string
-    default     = "test-interface-test"
+    default     = "interface-test"
   }
 
 variable "vm_count" {
@@ -66,9 +66,9 @@ variable "vm_count" {
 locals {
   virtual_machines = [
     for i in range(var.vm_count) : {
-      name                      = "test-vm-${i + 1}"
+      name                      = "test-tvm-${i + 1}"
       size                      = "Standard_B1s" # VM barata para pruebas
-      disk_name                 = "test-vm-${i + 1}-disk"
+      disk_name                 = "test-tvm-${i + 1}-disk"
       storage_account_type      = "Standard_LRS" # Tipo de almacenamiento
       username                  = "adminuser"
       password                  = "P@ssw0rd1234!"
@@ -86,13 +86,13 @@ variable "sku" {
 variable "load_balancer_name" {
   description = "Nombre para el balanceador de cargas"
   type        = string
-  default     = "test-lb-test"
+  default     = "lb-test"
 }
 
 variable "lb_pool_name" {
   description = "Nombre para el grupo de ips del balanceador de cargas"
   type        = string
-  default     = "test-lb-pool-test"
+  default     = "lb-pool-test"
 }
 
 
@@ -100,7 +100,7 @@ variable "lb_pool_name" {
 variable "lb_probe_name" {
   description = "Nombre para el grupo de ips del sondeador"
   type        = string
-  default     = "test-lb-probe-test"
+  default     = "lb-probe-test"
 }
 variable "port" {
   description = "Puerto del balanceador de cargas"
@@ -112,7 +112,7 @@ variable "port" {
 variable "rule_name" {
   description = "Nombre de la regla para el balanceador"
   type        = string
-  default     = "test-lb-rule-test"
+  default     = "lb-rule-test"
 }
 variable "rule_protocol" {
   description = "Protocolo que se va a seguir para el balanceo"
@@ -122,7 +122,7 @@ variable "rule_protocol" {
 variable "lb_out_rule_name" {
   description = "Protocolo que se va a seguir para el balanceo"
   type        = string
-  default     = "test-lboutbound-rule-test"
+  default     = "lboutbound-rule-test"
 }
 
 
