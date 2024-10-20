@@ -125,7 +125,7 @@ module "my_vm" {
     resource_group_name   = var.resource_group_name
     network_interface_ids = module.interface.network_interface_ids
 }
-´´´
+```
 ### Descripción
 Este módulo crea las máquinas virtuales en Azure. Se configura con una lista de máquinas virtuales (definida en un archivo local), ubicación, grupo de recursos y las interfaces de red asociadas.
 
@@ -167,7 +167,7 @@ module "lb_probe" {
     lb_probe_name       = var.lb_probe_name
     port                = var.port
 }
-´´´
+```
 ### Descripción
 Este módulo configura un sondeo (health probe) para verificar la disponibilidad de las instancias de las máquinas virtuales detrás del balanceador de carga. Se especifica el nombre del sondeo y el puerto a utilizar.
 
