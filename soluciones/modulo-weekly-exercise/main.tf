@@ -4,7 +4,7 @@
 
 module "vnet"{
     source              = "./modules/vnet"
-    name                = "main-vnet-tf"
+    name                = "main-vnet"
     address_space       = var.vnet_address_space
     location            = var.location
     resource_group_name = var.resource_group_name
