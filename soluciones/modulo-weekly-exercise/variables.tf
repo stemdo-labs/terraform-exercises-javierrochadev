@@ -43,7 +43,7 @@ variable "public_ip_name"  {
 
     description = "Nombre de la IP púbilca."
     type        = string
-    default     = "test-ip"
+    default     = "test-ip-public"
   }  
 
 variable "network_interface_name"  {
